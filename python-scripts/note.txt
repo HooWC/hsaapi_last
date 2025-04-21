@@ -1,0 +1,18 @@
+```
+For My Computer:
+D:\python32\python.exe export_rpt_so.py SO25-00249
+D:\python32\python.exe export_rpt_sq.py SQ21-00733
+```
+
+```
+D:\python32\python.exe export_rpt_so.py SO25-00249
+
+export_rpt_so.py
+export_rpt_sq.py
+```
+
+```
+For 30 server:
+D:\python\python\python.exe export_rpt_so.py SO25-00249
+D:\python\python\python.exe export_rpt_sq.py SQ21-00733
+```

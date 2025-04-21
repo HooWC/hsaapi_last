@@ -1,4 +1,3 @@
-
 require('rootpath')(); // 让 require() 可以使用相对路径，避免使用 ../../../ 这种复杂路径
 const cors = require('cors'); // 允许跨域访问
 const express = require('express'); // 引入 Express 框架
@@ -6,6 +5,7 @@ const https = require("https"); // HTTPS 服务器
 const http = require("http"); // HTTP 服务器
 const fs = require("fs"); // 处理文件系统
 const app = express(); // 创建 Express 应用实例
+const { exec } = require('child-process-promise');
 
 const errorHandler = require('_middleware/error-handler'); // 引入全局错误处理中间件
 
@@ -32,6 +32,35 @@ app.use('/dsoi', require('./dsoi/dsoi.controller'));
 app.use('/quote', require('./quote/quote.controller'));
 app.use('/chassisfile', require('./chassisfile/chassisfile.controller'));
 
+// auto build so / sq pdf file
+// build SO pdf file
+app.post('/generate-so', async (req, res) => {
+  const { so_id } = req.body;
+
+  // console.log('so_id:', so_id);
+  
+  try {
+    const result = await exec(`D:/python32/python.exe python-scripts/export_rpt_so.py ${so_id}`);
+    res.json({ success: true, pdf_path: `SalesOrder/SO_${so_id}.pdf` });
+  } catch (error) {
+    res.status(500).json({ error: error.stderr });
+  }
+});
+
+// build SQ pdf file
+app.post('/generate-sq', async (req, res) => {
+  const { sq_id } = req.body;
+
+  // console.log('sq_id:', sq_id);
+  
+  try {
+    const result = await exec(`D:/python32/python.exe python-scripts/export_rpt_sq.py ${sq_id}`);
+    res.json({ success: true, pdf_path: `SalesQuote/SQ_${sq_id}.pdf` });
+  } catch (error) {
+    res.status(500).json({ error: error.stderr });
+  }
+});
+
 // 全局错误处理
 app.use(errorHandler);
 
@@ -43,8 +72,8 @@ const options = {
 };
 
 // 设定 HTTP 和 HTTPS 服务器端口
-const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4200; // HTTP 端口
-const port_ssl = process.env.NODE_ENV === 'production' ? (process.env.PORT || 443) : 4201; // HTTPS 端口
+const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 6200; // HTTP 端口
+const port_ssl = process.env.NODE_ENV === 'production' ? (process.env.PORT || 443) : 6201; // HTTPS 端口
 
 // 启动 HTTP 服务器
 http.createServer(options, app).listen(port, () => 
