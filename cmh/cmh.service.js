@@ -19,7 +19,7 @@ async function getAll(page, size, search, orderBy, orderDir) {
     const conn = await db.getConnection();
     const res = await conn.request()
         .input('page', page || 1)
-        .input('size', size || 100)
+        .input('size', size || 50)
         .input('search', search || '')
         .input('orderBy', orderBy || 'createdt')
         .input('orderDir', orderDir || 'DESC')
